@@ -16,6 +16,9 @@ dependencies {
     implementation(compose.runtime)
     implementation(compose.foundation)
     implementation(compose.material)
+    // Add the org.json library for handling JSON data
+    implementation("org.json:json:20210307")
+
 }
 
 compose.desktop {
