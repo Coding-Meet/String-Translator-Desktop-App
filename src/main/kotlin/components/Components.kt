@@ -65,9 +65,7 @@ fun CustomTextField(
             backgroundColor = TextFieldBackground
         ),
         readOnly = readOnly,
-        modifier = modifier.fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .height(280.dp)
+        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).height(280.dp)
     )
 }
 
@@ -86,47 +84,38 @@ fun CustomButton(text: String, onClick: () -> Unit, isEnable: Boolean = true) {
 
 @Composable
 fun Toast(message: String, onDismiss: () -> Unit) {
-    val modifier = Modifier
-        .background(MaterialTheme.colors.primary)
-        .padding(8.dp)
-        .fillMaxWidth()
-        .wrapContentHeight()
-        .height(60.dp)
+    val modifier = Modifier.background(MaterialTheme.colors.primary).padding(8.dp).fillMaxWidth()
+        .wrapContentHeight().height(60.dp)
 
     Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
+        modifier = modifier, contentAlignment = Alignment.Center
     ) {
         Text(
-            text = message,
-            color = Color.White,
-            fontSize = 16.sp
+            text = message, color = Color.White, fontSize = 16.sp
         )
 
         IconButton(
-            onClick = onDismiss,
-            modifier = Modifier.align(Alignment.CenterEnd)
+            onClick = onDismiss, modifier = Modifier.align(Alignment.CenterEnd)
         ) {
             Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Close",
-                tint = Color.White
+                imageVector = Icons.Default.Close, contentDescription = "Close", tint = Color.White
             )
         }
     }
 }
 
 @Composable
-fun SelectCountries(languageList: MutableList<Language> ,onDismiss: () -> Unit) {
+fun SelectCountries(
+    languageList: MutableList<Language>,
+    onDismiss: (MutableList<Language>) -> Unit,
+) {
     var countryListState by remember { mutableStateOf(languageList) }
     val dialogState = DialogState(
-        width = 1000.dp,
-        height = 720.dp,
-        position = WindowPosition(Alignment.Center)
+        width = 1000.dp, height = 720.dp, position = WindowPosition(Alignment.Center)
     )
     DialogWindow(
         state = dialogState,
-        onCloseRequest = { onDismiss() },
+        onCloseRequest = { onDismiss(countryListState) },
         title = "Select language",
         content = {
             LazyVerticalGrid(
@@ -136,17 +125,13 @@ fun SelectCountries(languageList: MutableList<Language> ,onDismiss: () -> Unit) 
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(countryListState) { index, language ->
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
+                    Row(horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
+                        modifier = Modifier.fillMaxWidth().clickable {
                                 countryListState = countryListState.toMutableList().apply {
                                     this[index] = language.copy(isChecked = !language.isChecked)
                                 }
-                            }
-                    ) {
+                            }) {
                         Checkbox(
                             checked = language.isChecked,
                             onCheckedChange = {
