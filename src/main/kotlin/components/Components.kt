@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -113,39 +114,77 @@ fun SelectCountries(
     val dialogState = DialogState(
         width = 1000.dp, height = 720.dp, position = WindowPosition(Alignment.Center)
     )
+    var selectAllState by remember { mutableStateOf(languageList.all { it.isChecked }) }
+
     DialogWindow(
         state = dialogState,
         onCloseRequest = { onDismiss(countryListState) },
-        title = "Select language",
+        title = "Select Language",
         content = {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(5),
-                verticalArrangement = Arrangement.Center,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxSize()
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, // Center horizontally
+                verticalArrangement = Arrangement.Top // Align to the top
+
             ) {
-                itemsIndexed(countryListState) { index, language ->
-                    Row(horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth().clickable {
+                Row(horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        selectAllState = !selectAllState
+                        countryListState =
+                            countryListState.map { it.copy(isChecked = selectAllState) }
+                                .toMutableList()
+
+                    }) {
+                    Checkbox(
+                        checked = selectAllState,
+                        onCheckedChange = {
+                            selectAllState = it
+                            countryListState =
+                                countryListState.map { element -> element.copy(isChecked = selectAllState) }
+                                    .toMutableList()
+
+                        },
+                    )
+                    Text(
+                        text = "Select All",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.fillMaxWidth()
+                            .wrapContentHeight()
+                    )
+                }
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(5),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    itemsIndexed(countryListState) { index, language ->
+                        Row(horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth().clickable {
                                 countryListState = countryListState.toMutableList().apply {
                                     this[index] = language.copy(isChecked = !language.isChecked)
                                 }
+                                selectAllState = languageList.all { it.isChecked }
                             }) {
-                        Checkbox(
-                            checked = language.isChecked,
-                            onCheckedChange = {
-                                countryListState = countryListState.toMutableList().apply {
-                                    this[index] = language.copy(isChecked = it)
-                                }
-                            },
-                        )
-                        Text(
-                            text = "${language.name} (${language.code})",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.fillMaxWidth().wrapContentHeight()
-                        )
+                            Checkbox(
+                                checked = language.isChecked,
+                                onCheckedChange = {
+                                    countryListState = countryListState.toMutableList().apply {
+                                        this[index] = language.copy(isChecked = it)
+                                    }
+                                    selectAllState = languageList.all { it.isChecked }
+                                },
+                            )
+                            Text(
+                                text = "${language.name} (${language.code})",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.fillMaxWidth().wrapContentHeight()
+                            )
+                        }
                     }
                 }
             }
