@@ -14,7 +14,7 @@ fun main() = application {
     )
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Compose for Desktop",
+        title = "String Translator Desktop App",
         state = windowState,
         resizable = false,
     ) {

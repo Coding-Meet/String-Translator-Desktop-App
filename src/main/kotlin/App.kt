@@ -1,9 +1,9 @@
-
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -17,26 +17,19 @@ import components.CustomButton
 import components.CustomTextField
 import components.SelectCountries
 import components.Toast
+import components.translateDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import translate.translateHttpURLConnection
-import utils.createOutputMainFolder
-import utils.createStringFolder
-import utils.defaultLanguageCode
-import utils.endResourcesWrite
+import utils.WindowState
 import utils.languageList
-import utils.readAllStrings
-import utils.startResourcesWrite
-import utils.stringWrite
-import java.net.URLEncoder
 
 @Composable
 @Preview
 fun App() {
 
-    var isShowWindowState by remember { mutableStateOf(false) }
+    var isWindowShow by remember { mutableStateOf(WindowState.NO_STATE) }
     var stringState by remember {
         mutableStateOf(
             """
@@ -48,15 +41,7 @@ fun App() {
     """.trimIndent()
         )
     }
-//      <string name="create_thumbnail">Save thumbnail</string>
-//    <string name="settings">Settings</string>
-//    <string name="download_settings_desc" translatable="false">General, format, custom command</string>
-//    <string name="download">Download</string>
-//    <string name="url_empty">The link cannot be empty</string>
-//    <string name="extract_audio_summary">Download and save audio, instead of video</string>
-//    <string name="create_thumbnail_summary" translatable="false">Save video thumbnail as a file</string>
-//    <string name="yt_dlp_up_to_date">Using the latest version of yt-dlp</string>
-
+    var folderState by remember { mutableStateOf("String Translator App") }
     var countryListState by remember { mutableStateOf(languageList) }
     var isShowToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
@@ -74,59 +59,50 @@ fun App() {
                 Modifier.weight(0.2f, true).padding(start = 10.dp)
             ) {
                 CustomButton("Select Languages", onClick = {
-                    isShowWindowState = true
+                    isWindowShow = WindowState.SELECT_COUNTRY
                 })
+                CustomTextField(
+                    folderState,
+                    "Enter the Folder Name",
+                    Modifier.height(80.dp),
+                ) { folderState = it }
                 CustomButton("Convert",
-                    isEnable = stringState.isNotEmpty() && countryListState.any { it.isChecked },
+                    isEnable = stringState.isNotEmpty() && folderState.isNotEmpty() && countryListState.any { it.isChecked },
                     onClick = {
-                        createOutputMainFolder()
-                        try {
-                            val allStrings = readAllStrings(stringState)
-
-                            println(countryListState.filter { it.isChecked })
-                            countryListState.filter { it.isChecked }
-                                .forEachIndexed { index, language ->
-                                    val stringFile =
-                                        createStringFolder(language.code)
-                                    stringFile.startResourcesWrite()
-                                    for ((name, isTranslatable, textContent) in allStrings) {
-                                        println("Name: $name, isTranslatable: $isTranslatable, Text Content: $textContent")
-                                        if (isTranslatable) {
-
-//                                            stringFile.stringWrite(name,  someConvertText.random())
-                                            val convertedString = translateHttpURLConnection(
-                                                URLEncoder.encode(textContent, "UTF-8"),
-                                                URLEncoder.encode(defaultLanguageCode, "UTF-8"),
-                                                URLEncoder.encode(language.code, "UTF-8"),
-                                            ) {
-                                                isShowToast = true
-                                                toastMessage = it
-                                                CoroutineScope(Dispatchers.IO).launch {
-                                                    delay(3000)
-                                                    isShowToast = false
-                                                }
-                                            }
-                                            stringFile.stringWrite(name, convertedString)
-                                        } else {
-                                            stringFile.stringWrite(name, textContent, false)
-                                        }
-                                    }
-                                    stringFile.endResourcesWrite()
-                                }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    })
+                        isWindowShow = WindowState.CONVERT_TRANSLATE
+                    }
+                )
             }
         }
-        if (isShowWindowState) {
-            SelectCountries(countryListState) {
-                countryListState = it
-                isShowWindowState = false
+        when (isWindowShow) {
+            WindowState.SELECT_COUNTRY -> {
+                SelectCountries(countryListState) {
+                    countryListState = it
+                    isWindowShow = WindowState.NO_STATE
+                }
+            }
+
+            WindowState.CONVERT_TRANSLATE -> {
+                translateDialog(countryListState.filter { it.isChecked }, folderState,stringState, { errorMsg ->
+                    isShowToast = true
+                    toastMessage = errorMsg
+                    CoroutineScope(Dispatchers.IO).launch {
+                        delay(3000)
+                        isShowToast = false
+                    }
+                }, {
+                    isWindowShow = WindowState.NO_STATE
+                })
+            }
+
+            else -> {
+
             }
         }
         if (isShowToast) {
-            Toast(toastMessage) {}
+            Toast(toastMessage) {
+                isShowToast = false
+            }
         }
 
     }

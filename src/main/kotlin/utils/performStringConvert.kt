@@ -26,19 +26,16 @@ fun readAllStrings(xmlString: String): ArrayList<StringModel> {
     return result
 }
 
-const val APP_NAME = "String Translator"
 
-fun createOutputMainFolder() {
+fun createOutputMainFolder(folderName:String) {
     File("output").mkdir()
-    File("./output/$APP_NAME").apply {
-        deleteRecursively()
-        mkdir()
-    }
+    File("./output/$folderName").deleteRecursively()
+    File("./output/$folderName").mkdir()
 }
 
-fun createStringFolder(languageCode: String): File {
-    File("./output/$APP_NAME/values-$languageCode").mkdir()
-    val file = File("./output/$APP_NAME/values-$languageCode/strings.xml")
+fun createStringFolder(folderName:String, languageCode: String): File {
+    File("./output/$folderName/values-$languageCode").mkdir()
+    val file = File("./output/$folderName/values-$languageCode/strings.xml")
     if (!file.exists()) file.createNewFile()
     return file
 }

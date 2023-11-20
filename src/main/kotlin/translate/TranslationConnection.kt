@@ -23,9 +23,10 @@ fun translateHttpURLConnection(
     query: String,
     sourceLang: String,
     targetLang: String,
-    isFirstTime: Boolean = true,
+    onSuccessCallback : (String) -> Unit,
     onErrorCallback: (String) -> Unit,
-): String {
+    isFirstTime: Boolean = true,
+) {
     try {
         val convertedStringB = StringBuilder()
         var responseText =
@@ -67,8 +68,9 @@ fun translateHttpURLConnection(
                                 sourceLang,
                                 targetLang,
                                 query,
+                                onSuccessCallback,
+                                onErrorCallback,
                                 false,
-                                onErrorCallback
                             )
                         )
                     } else {
@@ -83,12 +85,12 @@ fun translateHttpURLConnection(
         } else {
             convertedStringB.append(getJsonArrayResponseToString(responseText))
         }
-        return convertedStringB.toString()
+        return onSuccessCallback(convertedStringB.toString())
     } catch (e: Exception) {
         e.printStackTrace()
         onErrorCallback(e.message.toString())
     }
-    return ""
+    return onSuccessCallback("")
 }
 
 private fun getJsonObjectResponseToString(responseText: String): String {

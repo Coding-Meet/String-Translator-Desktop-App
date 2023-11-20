@@ -3,6 +3,12 @@ package utils
 import models.Language
 
 const val defaultLanguageCode = "en"
+
+enum class WindowState {
+    NO_STATE,
+    SELECT_COUNTRY,
+    CONVERT_TRANSLATE
+}
 val languageList = mutableListOf(
     Language("af", "Afrikaans"),
     Language("agq", "Aghem"),
