@@ -34,9 +34,19 @@ fun App() {
         mutableStateOf(
             """
 <resources>
+    <string name="app_name">String Translator App</string>
+    <string name="hello">Hello, I am Meet</string>
+    <string name="how_are_you">How are You?</string>
     <string name="video_directory" translatable="false">Video folder</string>
-    <string name="extract_audio">Hello Meet</string>
-    <string name="extract">How are You?</string>
+    <string name="no_internet">Please check your network connection</string>
+    <string name="api_failed">Something not right, Please try again</string>
+    <string name="permission_error">This App will need Permission on your device.</string>
+    <string name="question_favorites">What are your favorites?</string>
+    <string name="answer_grateful">I'm grateful for your help</string>
+    <string name="loading_ad" translatable="false">loading_ad</string>
+    <string name="app_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="app_open_ads" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="request_assistance">Can you assist me?</string>
 </resources>
     """.trimIndent()
         )
@@ -107,13 +117,3 @@ fun App() {
 
     }
 }
-
-//fun showToast() {
-//    isShowToast = true
-//    toastMessage = "This is a toast message!"
-//    // Delay to simulate a real-world scenario
-//    CoroutineScope(Dispatchers.IO).launch {
-//        delay(3000)
-//        isShowToast = false
-//    }
-//}

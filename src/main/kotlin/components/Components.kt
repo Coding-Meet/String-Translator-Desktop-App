@@ -218,7 +218,7 @@ fun translateDialog(
     onDismiss: () -> Unit,
 ) {
     var checkedCountryListState by remember { mutableStateOf(languageList) }
-    var progressState by remember { mutableStateOf(50) }
+    var progressState by remember { mutableStateOf(0) }
     val dialogState = DialogState(
         width = 1000.dp, height = 720.dp, position = WindowPosition(Alignment.Center)
     )
