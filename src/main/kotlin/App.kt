@@ -76,7 +76,7 @@ fun App() {
                     "Enter the Folder Name",
                     Modifier.height(80.dp),
                 ) { folderState = it }
-                CustomButton("Convert",
+                CustomButton("Translate",
                     isEnable = stringState.isNotEmpty() && folderState.isNotEmpty() && countryListState.any { it.isChecked },
                     onClick = {
                         isWindowShow = WindowState.CONVERT_TRANSLATE
