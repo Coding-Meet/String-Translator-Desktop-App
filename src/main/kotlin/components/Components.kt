@@ -126,9 +126,9 @@ fun SelectCountries(
                 verticalArrangement = Arrangement.Top // Align to the top
 
             ) {
-                Row(horizontalArrangement = Arrangement.SpaceAround,
+                Row(horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().clickable {
+                    modifier = Modifier.clickable {
                         selectAllState = !selectAllState
                         countryListState =
                             countryListState.map { it.copy(isChecked = selectAllState) }
@@ -149,8 +149,7 @@ fun SelectCountries(
                         text = "Select All",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.fillMaxWidth()
-                            .wrapContentHeight()
+                        modifier = Modifier.padding(end=8.dp)
                     )
                 }
 
@@ -192,23 +191,3 @@ fun SelectCountries(
     )
 
 }
-
-
-//if (binding.sourceText.text.toString().trim().isNotEmpty()) {
-//    val query = URLEncoder.encode(binding.sourceText.text.toString().trim(), charset)
-//    val sourceLang = URLEncoder.encode(
-//        languageList[binding.sourceLangSelector.selectedItemPosition].code,
-//        charset
-//    )
-//    val targetLang = URLEncoder.encode(
-//        languageList[binding.targetLangSelector.selectedItemPosition].code,
-//        charset
-//    )
-//
-//    TranslationTasks(query, sourceLang, targetLang) {
-//        binding.targetText.text = it
-//
-//    }
-//} else {
-//    longToastShow("Required")
-//}

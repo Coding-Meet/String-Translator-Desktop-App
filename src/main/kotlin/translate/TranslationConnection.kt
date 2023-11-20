@@ -1,212 +1,125 @@
 package translate
 
 
-import org.json.*
-import java.io.*
-import java.net.*
+import org.json.JSONArray
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 
-const val charset = "UTF-8"
-
-private fun getTextHttpURLConnection(url: String): String {
-    var connection: HttpURLConnection? = null
-    val response = StringBuilder()
+private fun getTextHttpURLConnection(url: String, onErrorCallback: (String) -> Unit): String {
+    var response = ""
     try {
-        connection = URL(url).openConnection() as HttpURLConnection
-        connection.setRequestProperty("Accept-Charset", charset)
-        connection.addRequestProperty(
-            "User-Agent",
-            "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)"
-        )
-        val `in` = BufferedReader(
-            InputStreamReader(
-                connection.inputStream, charset
-            )
-        )
-        while (true) {
-            val inputLine = `in`.readLine()
-            if (inputLine == null) {
-                `in`.close()
-                return response.toString()
-            }
-            response.append(inputLine)
-        }
+        val connection = URL(url).openConnection() as HttpURLConnection
+        val inputStream = connection.inputStream
+        response = inputStream.bufferedReader().use { it.readText() }
     } catch (e: Exception) {
         e.printStackTrace()
-    } finally {
-        connection?.disconnect()
+        onErrorCallback(e.message.toString())
     }
-    return response.toString()
+    return response
 }
 
 fun translateHttpURLConnection(
     query: String,
     sourceLang: String,
     targetLang: String,
+    isFirstTime: Boolean = true,
+    onErrorCallback: (String) -> Unit,
 ): String {
     try {
-        try {
-            val sb = java.lang.StringBuilder()
-            var responseText =
+        val convertedStringB = StringBuilder()
+        var responseText =
+            getTextHttpURLConnection(
+                String.format(
+                    "https://translate.google.com/translate_a/single?&client=gtx&sl=%s&tl=%s&q=%s&dt=t",
+                    sourceLang,
+                    targetLang,
+                    query
+                ),
+                onErrorCallback
+            )
+        if (responseText.isEmpty()) {
+            responseText =
                 getTextHttpURLConnection(
                     String.format(
-                        "https://translate.google.com/translate_a/single?&client=gtx&sl=%s&tl=%s&q=%s&dt=t",
+                        "https://clients4.google.com/translate_a/t?client=dict-chrome-ex&sl=%s&tl=%s&q=%s&dt=t",
                         sourceLang,
                         targetLang,
                         query
-                    )
+                    ),
+                    onErrorCallback
                 )
             if (responseText.isEmpty()) {
                 responseText =
                     getTextHttpURLConnection(
                         String.format(
-                            "https://clients4.google.com/translate_a/t?client=dict-chrome-ex&sl=%s&tl=%s&q=%s&dt=t",
+                            "https://translate.google.com/m?sl=%s&tl=%s&q=%s",
                             sourceLang,
                             targetLang,
                             query
-                        )
+                        ),
+                        onErrorCallback
                     )
                 if (responseText.isEmpty()) {
-                    responseText =
-                        getTextHttpURLConnection(
-                            String.format(
-                                "https://translate.google.com/m?sl=%s&tl=%s&q=%s",
+                    if (isFirstTime) {
+                        convertedStringB.append(
+                            translateHttpURLConnection(
                                 sourceLang,
                                 targetLang,
-                                query
+                                query,
+                                false,
+                                onErrorCallback
                             )
                         )
-                    if (responseText.isEmpty()) {
-                        sb.append(translateURLConnection(sourceLang, targetLang, query))
                     } else {
-                        sb.append(getTranslationData(responseText))
+                        println("Error" + "Url Failed")
                     }
                 } else {
-                    val jsonObject = JSONObject(responseText)
-                    if (jsonObject.has("sentences")) {
-                        val jsonArray = jsonObject.getJSONArray("sentences")
-                        for (i in 0 until jsonArray.length()) {
-                            val jsonObject1 = jsonArray.getJSONObject(i)
-                            if (jsonObject1 != null && jsonObject1.has("trans")) {
-                                sb.append(jsonObject1.getString("trans"))
-                            }
-                        }
-                    }
+                    convertedStringB.append(getTranslationData(responseText, onErrorCallback))
                 }
             } else {
-                val jSONArray = JSONArray(responseText).getJSONArray(0)
-                for (i in 0 until jSONArray.length()) {
-                    val string = jSONArray.getJSONArray(i).getString(0)
-                    if (string.isNotEmpty() && string != "null") {
-                        sb.append(string)
-                    }
-                }
+                convertedStringB.append(getJsonObjectResponseToString(responseText))
             }
-            return sb.toString()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } else {
+            convertedStringB.append(getJsonArrayResponseToString(responseText))
         }
+        return convertedStringB.toString()
     } catch (e: Exception) {
         e.printStackTrace()
+        onErrorCallback(e.message.toString())
     }
     return ""
 }
 
-private fun translateURLConnection(sourceLang: String, targetLang: String, query: String): String {
-    try {
-        try {
-            val sb = StringBuilder()
-            var text =
-                getTextUrlConnection(
-                    String.format(
-                        "https://translate.google.com/translate_a/single?&client=gtx&sl=%s&tl=%s&q=%s&dt=t",
-                        sourceLang,
-                        targetLang,
-                        query
-                    )
-                )
-            if (text.isEmpty()) {
-                text =
-                    getTextUrlConnection(
-                        String.format(
-                            "https://clients4.google.com/translate_a/t?client=dict-chrome-ex&sl=%s&tl=%s&q=%s&dt=t",
-                            sourceLang,
-                            targetLang,
-                            query
-                        )
-                    )
-                if (text.isEmpty()) {
-                    text =
-                        getTextUrlConnection(
-                            String.format(
-                                "https://translate.google.com/m?sl=%s&tl=%s&q=%s",
-                                sourceLang,
-                                targetLang,
-                                query
-                            )
-                        )
-                    if (text.isEmpty()) {
-                        println("Error: "+ "Url Failed")
-                    } else {
-                        sb.append(getTranslationData(text))
-                    }
-                } else {
-                    val jsonObject = JSONObject(text)
-                    if (jsonObject.has("sentences")) {
-                        val jsonArray = jsonObject.getJSONArray("sentences")
-                        for (i in 0 until jsonArray.length()) {
-                            val jsonObject1 = jsonArray.getJSONObject(i)
-                            if (jsonObject1 != null && jsonObject1.has("trans")) {
-                                sb.append(jsonObject1.getString("trans"))
-                            }
-                        }
-                    }
-                }
-            } else {
-                val jSONArray = JSONArray(text).getJSONArray(0)
-                for (i in 0 until jSONArray.length()) {
-                    val string = jSONArray.getJSONArray(i).getString(0)
-                    if (string.isNotEmpty() && string != "null") {
-                        sb.append(string)
-                    }
-                }
+private fun getJsonObjectResponseToString(responseText: String): String {
+    val sb = StringBuilder()
+    val jsonObject = JSONObject(responseText)
+    if (jsonObject.has("sentences")) {
+        val jsonArray = jsonObject.getJSONArray("sentences")
+        for (i in 0 until jsonArray.length()) {
+            val jsonObject1 = jsonArray.getJSONObject(i)
+            if (jsonObject1.has("trans")) {
+                sb.append(jsonObject1.getString("trans"))
             }
-            return sb.toString()
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
-    } catch (e: Exception) {
-        e.printStackTrace()
     }
-    return ""
+    return sb.toString()
 }
 
-private fun getTextUrlConnection(url: String): String {
-    try {
-        val connection = URL(url).openConnection()
-        connection.setRequestProperty("Accept-Charset", charset)
-        connection.addRequestProperty(
-            "User-Agent",
-            "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)"
-        )
-        val `in` = BufferedReader(InputStreamReader(connection.getInputStream(), charset))
-        val response = java.lang.StringBuilder()
-        while (true) {
-            val inputLine = `in`.readLine()
-            if (inputLine == null) {
-                `in`.close()
-                return response.toString()
-            }
-            response.append(inputLine)
+private fun getJsonArrayResponseToString(responseText: String): String {
+    val sb = StringBuilder()
+    val jSONArray = JSONArray(responseText).getJSONArray(0)
+    for (i in 0 until jSONArray.length()) {
+        val string = jSONArray.getJSONArray(i).getString(0)
+        if (string.isNotEmpty() && string != "null") {
+            sb.append(string)
         }
-    } catch (e: Exception) {
-        e.printStackTrace()
     }
-    return ""
+    return sb.toString()
 }
 
-fun getTranslationData(responseText: String): String {
+fun getTranslationData(responseText: String, onErrorCallback: (String) -> Unit): String {
     try {
-
         var nativeText = "class=\"t0\">"
         val result =
             responseText.substring(responseText.indexOf(nativeText) + nativeText.length)
@@ -220,6 +133,7 @@ fun getTranslationData(responseText: String): String {
         }
     } catch (e: Exception) {
         e.printStackTrace()
+        onErrorCallback(e.message.toString())
     }
     return ""
 }

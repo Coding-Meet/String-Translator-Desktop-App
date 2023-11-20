@@ -2,6 +2,7 @@ package utils
 
 import models.Language
 
+const val defaultLanguageCode = "en"
 val languageList = mutableListOf(
     Language("af", "Afrikaans"),
     Language("agq", "Aghem"),
