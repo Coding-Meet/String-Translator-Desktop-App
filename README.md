@@ -1,4 +1,6 @@
-![Logo](image/StringTranslatorDesktopApp.png)
+[![String Translator Desktop App Preview](image/StringTranslatorDesktopApp.png)](https://www.youtube.com/watch?v=EDbxJkgJDf8)
+
+Click the image above to watch a demo of the String Translator Desktop App on YouTube.
 
 ## Overview
 
