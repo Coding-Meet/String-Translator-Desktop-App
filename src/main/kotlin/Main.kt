@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -43,17 +42,25 @@ fun main() = application {
         resizable = false,
         undecorated = true
     ) {
-        Column(Modifier.fillMaxSize()
-            .border(width = 2.dp, color = TextFieldBackground, shape = RoundedCornerShape(2.dp))
-            .clip(RoundedCornerShape(bottomStart = 120.dp, bottomEnd = 120.dp))) {
-            AppWindowTitleBar(windowState) { exitApplication() }
+        Column(
+            Modifier.fillMaxSize()
+                .border(width = 2.dp, color = TextFieldBackground, shape = RoundedCornerShape(2.dp))
+                .clip(RoundedCornerShape(bottomStart = 120.dp, bottomEnd = 120.dp))
+        ) {
+            AppWindowTitleBar(isMinimized = {
+                windowState.isMinimized = true
+            }) { exitApplication() }
             App()
         }
     }
 }
 
 @Composable
-private fun WindowScope.AppWindowTitleBar(state: WindowState, onClose: () -> Unit) =
+fun WindowScope.AppWindowTitleBar(
+    isWindow: Boolean = true,
+    isMinimized: () -> Unit = { },
+    onClose: () -> Unit,
+) =
     WindowDraggableArea {
         Box(
             Modifier.fillMaxWidth()
@@ -75,13 +82,14 @@ private fun WindowScope.AppWindowTitleBar(state: WindowState, onClose: () -> Uni
                 modifier = Modifier.fillMaxSize().padding(horizontal = 160.dp)
                     .clip(RoundedCornerShape(bottomStart = 100.dp, bottomEnd = 100.dp))
             )
-
-            Icon(
-                imageVector = Icons.Rounded.KeyboardArrowDown,
-                contentDescription = "Minimise",
-                tint = TextFieldBackground,
-                modifier = Modifier.padding(end = 32.dp).clickable { state.isMinimized = true }
-            )
+            if (isWindow) {
+                Icon(
+                    imageVector = Icons.Rounded.KeyboardArrowDown,
+                    contentDescription = "Minimise",
+                    tint = TextFieldBackground,
+                    modifier = Modifier.padding(end = 32.dp).clickable { isMinimized() }
+                )
+            }
 
             Icon(
                 imageVector = Icons.Rounded.Close,

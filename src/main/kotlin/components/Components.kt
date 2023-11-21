@@ -1,6 +1,8 @@
 package components
 
+import AppWindowTitleBar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -101,14 +103,22 @@ fun CustomButton(modifier: Modifier, text: String, onClick: () -> Unit, isEnable
 
 @Composable
 fun Toast(message: String, onDismiss: () -> Unit) {
-    val modifier = Modifier.background(MaterialTheme.colors.primary).padding(8.dp).fillMaxWidth()
-        .wrapContentHeight().height(60.dp)
+    val modifier =
+        Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp).clip(RoundedCornerShape(12.dp))
+            .background(
+                if (message.startsWith("Error")) {
+                    MaterialTheme.colors.error
+                } else {
+                    Color(0xFF4BB543)
+                }
+            ).fillMaxWidth()
+            .wrapContentHeight().height(40.dp)
 
     Box(
         modifier = modifier, contentAlignment = Alignment.Center
     ) {
         Text(
-            text = message, color = Color.White, fontSize = 16.sp
+            text = message, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold
         )
 
         IconButton(
@@ -136,72 +146,84 @@ fun SelectCountries(
         state = dialogState,
         onCloseRequest = { onDismiss(countryListState) },
         title = "Select Language",
+        undecorated = true,
+        resizable = false,
         content = {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
-
+                Modifier.fillMaxSize()
+                    .border(
+                        width = 2.dp,
+                        color = TextFieldBackground,
+                        shape = RoundedCornerShape(2.dp)
+                    )
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable {
-                        selectAllState = !selectAllState
-                        countryListState =
-                            countryListState.map { it.copy(isChecked = selectAllState) }
-                                .toMutableList()
+                AppWindowTitleBar(isWindow = false) { onDismiss(countryListState) }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
 
-                    }) {
-                    Checkbox(
-                        checked = selectAllState,
-                        onCheckedChange = {
-                            selectAllState = it
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable {
+                            selectAllState = !selectAllState
                             countryListState =
-                                countryListState.map { element -> element.copy(isChecked = selectAllState) }
+                                countryListState.map { it.copy(isChecked = selectAllState) }
                                     .toMutableList()
 
-                        },
-                        colors = CheckboxDefaults.colors(checkedColor = TextFieldBackground)
-                    )
-                    Text(
-                        text = "Select All",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                }
+                        }) {
+                        Checkbox(
+                            checked = selectAllState,
+                            onCheckedChange = {
+                                selectAllState = it
+                                countryListState =
+                                    countryListState.map { element -> element.copy(isChecked = selectAllState) }
+                                        .toMutableList()
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(5),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    itemsIndexed(countryListState) { index, language ->
-                        Row(horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth().clickable {
-                                countryListState = countryListState.toMutableList().apply {
-                                    this[index] = language.copy(isChecked = !language.isChecked)
-                                }
-                                selectAllState = languageList.all { it.isChecked }
-                            }) {
-                            Checkbox(
-                                checked = language.isChecked,
-                                onCheckedChange = {
+                            },
+                            colors = CheckboxDefaults.colors(checkedColor = TextFieldBackground)
+                        )
+                        Text(
+                            text = "Select All",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(5),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        itemsIndexed(countryListState) { index, language ->
+                            Row(horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth().clickable {
                                     countryListState = countryListState.toMutableList().apply {
-                                        this[index] = language.copy(isChecked = it)
+                                        this[index] = language.copy(isChecked = !language.isChecked)
                                     }
                                     selectAllState = languageList.all { it.isChecked }
-                                },
-                                colors = CheckboxDefaults.colors(checkedColor = TextFieldBackground)
-                            )
-                            Text(
-                                text = "${language.name} (${language.code})",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.fillMaxWidth().wrapContentHeight()
-                            )
+                                }) {
+                                Checkbox(
+                                    checked = language.isChecked,
+                                    onCheckedChange = {
+                                        countryListState = countryListState.toMutableList().apply {
+                                            this[index] = language.copy(isChecked = it)
+                                        }
+                                        selectAllState = languageList.all { it.isChecked }
+                                    },
+                                    colors = CheckboxDefaults.colors(checkedColor = TextFieldBackground)
+                                )
+                                Text(
+                                    text = "${language.name} (${language.code})",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.fillMaxWidth().wrapContentHeight()
+                                )
+                            }
                         }
                     }
                 }
@@ -215,7 +237,7 @@ fun translateDialog(
     folderName: String,
     stringState: String,
     errorCallback: (String) -> Unit,
-    onDismiss: () -> Unit,
+    onDismiss: (String) -> Unit,
 ) {
     var checkedCountryListState by remember { mutableStateOf(languageList) }
     var progressState by remember { mutableStateOf(0) }
@@ -225,75 +247,90 @@ fun translateDialog(
     DialogWindow(
         state = dialogState,
         onCloseRequest = {
-            onDismiss()
+            onDismiss("")
         },
         title = "Translating All String",
+        undecorated = true,
+        resizable = false,
         content = {
             Column(
-                modifier = Modifier
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                LinearProgressIndicator(
-                    progressState.toFloat() / 100, modifier = Modifier
-                        .height(10.dp)
-                        .fillMaxWidth(), color = TextFieldBackground, strokeCap = StrokeCap.Round
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                ) {
-                    Text(
-                        "Progress: ${progressState}%",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
+                Modifier.fillMaxSize()
+                    .border(
+                        width = 2.dp,
+                        color = TextFieldBackground,
+                        shape = RoundedCornerShape(2.dp)
                     )
-                }
-                if (progressState== 100) {
+            ) {
+                AppWindowTitleBar(isWindow = false) { onDismiss("") }
+
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    LinearProgressIndicator(
+                        progressState.toFloat() / 100,
+                        modifier = Modifier
+                            .height(10.dp)
+                            .fillMaxWidth(),
+                        color = TextFieldBackground,
+                        strokeCap = StrokeCap.Round
+                    )
                     Spacer(modifier = Modifier.height(10.dp))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround,
                     ) {
-                        CustomButton(Modifier,"Done", onClick = {
-                            onDismiss()
-                        })
+                        Text(
+                            "Progress: ${progressState}%",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(5),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                ) {
-                    itemsIndexed(checkedCountryListState) { _, language ->
+                    if (progressState == 100) {
+                        Spacer(modifier = Modifier.height(10.dp))
                         Row(
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround,
                         ) {
-                            Checkbox(
-                                checked = !language.isChecked,
-                                enabled = false,
-                                onCheckedChange = {},
-                                colors = CheckboxDefaults.colors(checkedColor = TextFieldBackground)
-                            )
-                            Text(
-                                text = "${language.name} (${language.code})",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.fillMaxWidth().wrapContentHeight()
-                            )
+                            CustomButton(Modifier, "Done", onClick = {
+                                onDismiss("All strings have been successfully translated.")
+                            })
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(5),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                    ) {
+                        itemsIndexed(checkedCountryListState) { _, language ->
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Checkbox(
+                                    checked = !language.isChecked,
+                                    enabled = false,
+                                    onCheckedChange = {},
+                                    colors = CheckboxDefaults.colors(checkedColor = TextFieldBackground)
+                                )
+                                Text(
+                                    text = "${language.name} (${language.code})",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.fillMaxWidth().wrapContentHeight()
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-    )
+        })
     CoroutineScope(Dispatchers.IO).launch {
         try {
             createOutputMainFolder(folderName)
@@ -303,7 +340,7 @@ fun translateDialog(
             languageList
                 .forEachIndexed { index, language ->
                     val stringFile =
-                        createStringFolder(folderName,language.code)
+                        createStringFolder(folderName, language.code)
                     stringFile.startResourcesWrite()
                     allStrings.forEachIndexed { _, stringModel ->
 
@@ -322,7 +359,8 @@ fun translateDialog(
                         } else {
                             stringFile.stringWrite(name, textContent, false)
                         }
-                        progressState = ((index.toFloat() / (languageList.size - 1)) * 100).toInt()
+                        progressState =
+                            ((index.toFloat() / (languageList.size - 1)) * 100).toInt()
 
                     }
                     stringFile.endResourcesWrite()

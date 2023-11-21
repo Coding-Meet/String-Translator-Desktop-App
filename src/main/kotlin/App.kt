@@ -1,4 +1,3 @@
-
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,6 +59,11 @@ fun App() {
     var isShowToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
     MaterialTheme {
+        if (isShowToast) {
+            Toast(toastMessage) {
+                isShowToast = false
+            }
+        }
         Column(Modifier.fillMaxSize().padding(8.dp)) {
             CustomTextField(
                 stringState,
@@ -74,9 +78,12 @@ fun App() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CustomButton(modifier = Modifier.weight(1f).height(50.dp),"Select Languages", onClick = {
-                    isWindowShow = WindowState.SELECT_COUNTRY
-                })
+                CustomButton(
+                    modifier = Modifier.weight(1f).height(50.dp),
+                    "Select Languages",
+                    onClick = {
+                        isWindowShow = WindowState.SELECT_COUNTRY
+                    })
                 CustomTextField(
                     folderState,
                     "Enter the Folder Name",
@@ -100,31 +107,48 @@ fun App() {
                 SelectCountries(countryListState) {
                     countryListState = it
                     isWindowShow = WindowState.NO_STATE
+                    if (!it.any { elements -> elements.isChecked }){
+                        isShowToast = true
+                        toastMessage = "Error: Please select at least one target language before translating."
+                        CoroutineScope(Dispatchers.IO).launch {
+                            delay(3000)
+                            isShowToast = false
+                        }
+                    }
                 }
             }
 
             WindowState.CONVERT_TRANSLATE -> {
-                translateDialog(countryListState.filter { it.isChecked }, folderState,stringState, { errorMsg ->
-                    isShowToast = true
-                    toastMessage = errorMsg
-                    CoroutineScope(Dispatchers.IO).launch {
-                        delay(3000)
-                        isShowToast = false
-                    }
-                }, {
-                    isWindowShow = WindowState.NO_STATE
-                })
+                translateDialog(
+                    countryListState.filter { it.isChecked },
+                    folderState,
+                    stringState,
+                    { errorMsg ->
+                        isShowToast = true
+                        toastMessage = "Error: $errorMsg"
+                        CoroutineScope(Dispatchers.IO).launch {
+                            delay(3000)
+                            isShowToast = false
+                        }
+                    },
+                    { successMsg ->
+                        isWindowShow = WindowState.NO_STATE
+                        if (successMsg.trim().isNotEmpty()) {
+                            isShowToast = true
+                            toastMessage = successMsg
+                            CoroutineScope(Dispatchers.IO).launch {
+                                delay(3000)
+                                isShowToast = false
+                            }
+                        }
+                    })
             }
 
             else -> {
 
             }
         }
-        if (isShowToast) {
-            Toast(toastMessage) {
-                isShowToast = false
-            }
-        }
+
 
     }
 }
