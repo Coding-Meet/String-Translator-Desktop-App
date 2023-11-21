@@ -87,13 +87,13 @@ fun CustomTextField(
 }
 
 @Composable
-fun CustomButton(text: String, onClick: () -> Unit, isEnable: Boolean = true) {
+fun CustomButton(modifier: Modifier, text: String, onClick: () -> Unit, isEnable: Boolean = true) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(TextFieldBackground, Color.White),
         shape = RoundedCornerShape(12.dp),
         enabled = isEnable,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(text, fontWeight = FontWeight.Bold, fontSize = 16.sp)
     }
@@ -258,7 +258,7 @@ fun translateDialog(
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround,
                     ) {
-                        CustomButton("Done", onClick = {
+                        CustomButton(Modifier,"Done", onClick = {
                             onDismiss()
                         })
                     }
