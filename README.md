@@ -22,15 +22,49 @@ String Translator Desktop App is a simple desktop application designed to help d
 
 ## Working 💻
 
-1. Launch the application.
-2. Enter the source strings in XML format into the provided text field.
-3. Select the target languages.
-4. Enter the folder name where you want to store the translated strings.
-5. Click "Translate" to initiate the translation process.
-6. The translated strings in XML format will be saved in the output folder within your specified folder Name.
-7. Export the translated strings to XML format for seamless integration into your projects.
+1. **Launch the application.**
 
-## Preview 👀
+![Step 1](image/s1.png)
+
+2. **Enter the source strings in XML format into the provided text field.**
+
+![Step 2](image/s0.png)
+![Step 3](image/s2.png)
+
+3. **Select the target languages.**
+
+![Step 4](image/s3.png)
+
+4. **Enter the folder name where you want to store the translated strings.**
+
+5. **Click "Translate" to initiate the translation process.**
+
+![Step 5](image/s4.png)
+![Step 6](image/s5.png)
+
+![Step 7](image/s6.png)
+
+6. **Click "Done".**
+
+![Step 8](image/s7.png)
+
+7. **"All strings have been successfully translated" message shown.**
+
+![Step 9](image/s8.png)
+
+8. **The translated strings in XML format will be saved in the output folder within your specified folder Name.**
+
+![Step 10](image/s9.png)
+
+9. **Open Android Studio Project and paste all values folder in an Src Folder using Explorer.**
+
+![Step 11](image/s10.png)
+
+10. **All translated strings successfully imported.**
+
+![Step 12](image/s11.png)
+![Step 13](image/s12.png)
+![Step 14](image/s13.png)
 
 
 ## Contributing 🤝
