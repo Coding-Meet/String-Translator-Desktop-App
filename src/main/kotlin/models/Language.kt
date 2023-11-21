@@ -1,3 +1,7 @@
 package models
 
-data class Language(val code: String, val name: String,var isChecked : Boolean = false)
+data class Language(
+    val code: String,
+    val name: String,
+    var isChecked: Boolean = false
+)

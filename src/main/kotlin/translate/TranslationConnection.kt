@@ -23,7 +23,7 @@ fun translateHttpURLConnection(
     query: String,
     sourceLang: String,
     targetLang: String,
-    onSuccessCallback : (String) -> Unit,
+    onSuccessCallback: (String) -> Unit,
     onErrorCallback: (String) -> Unit,
     isFirstTime: Boolean = true,
 ) {

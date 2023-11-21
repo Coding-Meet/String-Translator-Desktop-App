@@ -1,4 +1,3 @@
-
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -78,35 +77,38 @@ fun App() {
                     modifier = Modifier.weight(1f).height(50.dp),
                     "Translate",
                     onClick = {
-                        if (stringState.isEmpty()){
+                        if (stringState.isEmpty()) {
                             isShowToast = true
                             toastMessage = "Error: Please enter the source strings"
                             CoroutineScope(Dispatchers.IO).launch {
                                 delay(3000)
                                 isShowToast = false
                             }
-                        }else if (!isValidXml(stringState)){
+                        } else if (!isValidXml(stringState)) {
                             isShowToast = true
-                            toastMessage ="Error: Please enter the source strings in XML format into the provided text field."
+                            toastMessage =
+                                "Error: Please enter the source strings in XML format into the provided text field."
                             CoroutineScope(Dispatchers.IO).launch {
                                 delay(3000)
                                 isShowToast = false
                             }
-                        } else if (folderState.isEmpty()){
+                        } else if (folderState.isEmpty()) {
                             isShowToast = true
-                            toastMessage ="Error: Enter the folder name where you want to store the translated strings."
+                            toastMessage =
+                                "Error: Enter the folder name where you want to store the translated strings."
                             CoroutineScope(Dispatchers.IO).launch {
                                 delay(3000)
                                 isShowToast = false
                             }
-                        } else if (!countryListState.any { it.isChecked }){
+                        } else if (!countryListState.any { it.isChecked }) {
                             isShowToast = true
-                            toastMessage = "Error: Please select at least one target language before translating."
+                            toastMessage =
+                                "Error: Please select at least one target language before translating."
                             CoroutineScope(Dispatchers.IO).launch {
                                 delay(3000)
                                 isShowToast = false
                             }
-                        }else {
+                        } else {
                             isWindowShow = WindowState.CONVERT_TRANSLATE
                         }
                     }
@@ -118,9 +120,10 @@ fun App() {
                 SelectCountries(countryListState) {
                     countryListState = it
                     isWindowShow = WindowState.NO_STATE
-                    if (!it.any { elements -> elements.isChecked }){
+                    if (!it.any { elements -> elements.isChecked }) {
                         isShowToast = true
-                        toastMessage = "Error: Please select at least one target language before translating."
+                        toastMessage =
+                            "Error: Please select at least one target language before translating."
                         CoroutineScope(Dispatchers.IO).launch {
                             delay(3000)
                             isShowToast = false

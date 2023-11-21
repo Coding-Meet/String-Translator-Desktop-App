@@ -9,6 +9,7 @@ enum class WindowState {
     SELECT_COUNTRY,
     CONVERT_TRANSLATE
 }
+
 val languageList = mutableListOf(
     Language("af", "Afrikaans"),
     Language("agq", "Aghem"),
