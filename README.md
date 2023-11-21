@@ -1,14 +1,15 @@
-# String Translator Desktop App
+![Logo](image/StringTranslatorDesktopApp.png)
 
 ## Overview
 
-String Translator Desktop App is a simple desktop application designed to help developers translate strings easily. It supports the translation of multiple strings into various languages, making the localization process more efficient.
+String Translator Desktop App is a powerful desktop application built with Jetpack Compose, aiming to streamline the translation of strings for developers. It empowers users to seamlessly translate multiple strings into various languages, thereby optimizing the localization process.
 
 ## Features
 
 - **Bulk Translation**: Translate multiple strings at once to target languages.
 - **Language Selection**: Choose from a variety of supported languages for translation.
-- **User-Friendly Interface**: Intuitive and easy-to-use graphical interface.
+- **Jetpack Compose UI**: Enjoy an intuitive and visually appealing interface built with Jetpack Compose.
+- **Translation with Google Translate**: Effortlessly translate your text using Google Translate without the need for an API key.
 - **Export to XML Format**: Export translated strings to XML for seamless integration into your projects.
 
 ## Getting Started
