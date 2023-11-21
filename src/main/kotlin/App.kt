@@ -1,3 +1,4 @@
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,15 +17,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import components.CustomButton
-import components.CustomTextField
-import components.SelectCountries
-import components.Toast
-import components.translateDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import screen.CustomButton
+import screen.CustomTextField
+import screen.SelectCountries
+import screen.Toast
+import screen.translateDialog
 import utils.WindowState
 import utils.isValidXml
 import utils.languageList
