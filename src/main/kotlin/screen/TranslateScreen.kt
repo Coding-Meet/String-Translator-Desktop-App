@@ -67,7 +67,11 @@ fun translateDialog(
     DialogWindow(
         state = dialogState,
         onCloseRequest = {
-            onDismiss("")
+            if (progressState == 100) {
+                onDismiss("All strings have been successfully translated.")
+            } else {
+                onDismiss("Translation canceled by you.")
+            }
         },
         title = "Translating All String",
         undecorated = true,
@@ -82,7 +86,13 @@ fun translateDialog(
                         shape = RoundedCornerShape(2.dp)
                     )
             ) {
-                AppWindowTitleBar(isWindow = false) { onDismiss("") }
+                AppWindowTitleBar(isWindow = false) {
+                    if (progressState == 100) {
+                        onDismiss("All strings have been successfully translated.")
+                    } else {
+                        onDismiss("Translation canceled by you.")
+                    }
+                }
 
                 Column(
                     modifier = Modifier
@@ -138,7 +148,11 @@ fun translateDialog(
                                     checked = !language.isChecked,
                                     enabled = false,
                                     onCheckedChange = {},
-                                    colors = CheckboxDefaults.colors(checkedColor = TextFieldBackground)
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = TextFieldBackground,
+                                        disabledColor = TextFieldBackground,
+                                        disabledIndeterminateColor = TextFieldBackground
+                                    )
                                 )
                                 Text(
                                     text = "${language.name} (${language.code})",
@@ -158,6 +172,7 @@ fun translateDialog(
             val allStrings = readAllStrings(stringState)
             progressState = 0
             delay(300)
+            progressState = 5
             languageList
                 .forEachIndexed { index, language ->
                     val stringFile =
@@ -181,8 +196,7 @@ fun translateDialog(
                             stringFile.stringWrite(name, textContent, false)
                         }
                         progressState =
-                            ((index.toFloat() / (languageList.size - 1)) * 100).toInt()
-
+                            ((index.toFloat() / (languageList.size)) * 100).toInt()
                     }
                     stringFile.endResourcesWrite()
                     checkedCountryListState =

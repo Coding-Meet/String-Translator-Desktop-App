@@ -148,6 +148,9 @@ fun App() {
                     { successMsg ->
                         isWindowShow = WindowState.NO_STATE
                         if (successMsg.trim().isNotEmpty()) {
+                            stringState = ""
+                            folderState = ""
+                            countryListState = languageList
                             isShowToast = true
                             toastMessage = successMsg
                             CoroutineScope(Dispatchers.IO).launch {
