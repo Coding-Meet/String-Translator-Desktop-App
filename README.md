@@ -37,9 +37,12 @@ String Translator Desktop App is a simple desktop application designed to help d
 
 4. **Enter the folder name where you want to store the translated strings.**
 
+![Step 5](image/s4.png)
+
 5. **Click "Translate" to initiate the translation process.**
 
 ![Step 5](image/s4.png)
+
 ![Step 6](image/s5.png)
 
 ![Step 7](image/s6.png)
