@@ -17,4 +17,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "StringTranslatorApp"
+rootProject.name = "StringTranslatorDesktopApp"
