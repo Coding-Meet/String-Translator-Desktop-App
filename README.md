@@ -42,13 +42,14 @@ String Translator Desktop App is a simple desktop application designed to help d
 ![Step 5](image/s4.png)
 ![Step 6](image/s5.png)
 
+![Step 7](image/s6.png)
+
 6. **Click "Done".**
 
-![Step 7](image/s6.png)
+![Step 8](image/s7.png)
 
 7. **"All strings have been successfully translated" message shown.**
 
-![Step 8](image/s7.png)
 ![Step 9](image/s8.png)
 
 8. **The translated strings in XML format will be saved in the output folder within your specified folder Name.**
