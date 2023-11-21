@@ -172,7 +172,6 @@ fun translateDialog(
             val allStrings = readAllStrings(stringState)
             progressState = 0
             delay(300)
-            progressState = 5
             languageList
                 .forEachIndexed { index, language ->
                     val stringFile =
