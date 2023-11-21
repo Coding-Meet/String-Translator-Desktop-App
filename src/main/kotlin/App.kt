@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import utils.WindowState
+import utils.isValidXml
 import utils.languageList
 
 @Composable
@@ -33,28 +34,8 @@ import utils.languageList
 fun App() {
 
     var isWindowShow by remember { mutableStateOf(WindowState.NO_STATE) }
-    var stringState by remember {
-        mutableStateOf(
-            """
-<resources>
-    <string name="app_name">String Translator App</string>
-    <string name="hello">Hello, I am Meet</string>
-    <string name="how_are_you">How are You?</string>
-    <string name="video_directory" translatable="false">Video folder</string>
-    <string name="no_internet">Please check your network connection</string>
-    <string name="api_failed">Something not right, Please try again</string>
-    <string name="permission_error">This App will need Permission on your device.</string>
-    <string name="question_favorites">What are your favorites?</string>
-    <string name="answer_grateful">I'm grateful for your help</string>
-    <string name="loading_ad" translatable="false">loading_ad</string>
-    <string name="app_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="app_open_ads" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
-    <string name="request_assistance">Can you assist me?</string>
-</resources>
-    """.trimIndent()
-        )
-    }
-    var folderState by remember { mutableStateOf("String Translator App") }
+    var stringState by remember { mutableStateOf("") }
+    var folderState by remember { mutableStateOf("") }
     var countryListState by remember { mutableStateOf(languageList) }
     var isShowToast by remember { mutableStateOf(false) }
     var toastMessage by remember { mutableStateOf("") }
@@ -95,9 +76,38 @@ fun App() {
                 CustomButton(
                     modifier = Modifier.weight(1f).height(50.dp),
                     "Translate",
-                    isEnable = stringState.isNotEmpty() && folderState.isNotEmpty() && countryListState.any { it.isChecked },
                     onClick = {
-                        isWindowShow = WindowState.CONVERT_TRANSLATE
+                        if (stringState.isEmpty()){
+                            isShowToast = true
+                            toastMessage = "Error: Please enter the source strings"
+                            CoroutineScope(Dispatchers.IO).launch {
+                                delay(3000)
+                                isShowToast = false
+                            }
+                        }else if (!isValidXml(stringState)){
+                            isShowToast = true
+                            toastMessage ="Error: Please enter the source strings in XML format into the provided text field."
+                            CoroutineScope(Dispatchers.IO).launch {
+                                delay(3000)
+                                isShowToast = false
+                            }
+                        } else if (folderState.isEmpty()){
+                            isShowToast = true
+                            toastMessage ="Error: Enter the folder name where you want to store the translated strings."
+                            CoroutineScope(Dispatchers.IO).launch {
+                                delay(3000)
+                                isShowToast = false
+                            }
+                        } else if (!countryListState.any { it.isChecked }){
+                            isShowToast = true
+                            toastMessage = "Error: Please select at least one target language before translating."
+                            CoroutineScope(Dispatchers.IO).launch {
+                                delay(3000)
+                                isShowToast = false
+                            }
+                        }else {
+                            isWindowShow = WindowState.CONVERT_TRANSLATE
+                        }
                     }
                 )
             }

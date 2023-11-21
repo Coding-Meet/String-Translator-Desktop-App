@@ -15,11 +15,13 @@ fun readAllStrings(xmlString: String): ArrayList<StringModel> {
     val stringElements = document.getElementsByTagName("string")
     for (i in 0 until stringElements.length) {
         val element = stringElements.item(i) as Element
-        val name = element.getAttribute("name")
-        val translatable = element.getAttribute("translatable")
-        val textContent = element.textContent
-        val isTranslatable = !translatable.equals("false", true)
-        result.add(StringModel(name, isTranslatable, textContent))
+        if (element.hasAttribute("name")) {
+            val name = element.getAttribute("name")
+            val translatable = element.getAttribute("translatable")
+            val textContent = element.textContent
+            val isTranslatable = !translatable.equals("false", true)
+            result.add(StringModel(name, isTranslatable, textContent))
+        }
 
     }
 
@@ -27,13 +29,13 @@ fun readAllStrings(xmlString: String): ArrayList<StringModel> {
 }
 
 
-fun createOutputMainFolder(folderName:String) {
+fun createOutputMainFolder(folderName: String) {
     File("output").mkdir()
     File("./output/$folderName").deleteRecursively()
     File("./output/$folderName").mkdir()
 }
 
-fun createStringFolder(folderName:String, languageCode: String): File {
+fun createStringFolder(folderName: String, languageCode: String): File {
     File("./output/$folderName/values-$languageCode").mkdir()
     val file = File("./output/$folderName/values-$languageCode/strings.xml")
     if (!file.exists()) file.createNewFile()
@@ -60,4 +62,15 @@ fun File.startResourcesWrite() {
 
 fun File.endResourcesWrite() {
     appendText("\n</resources>")
+}
+
+fun isValidXml(xmlString: String): Boolean {
+    return try {
+        val factory = DocumentBuilderFactory.newInstance()
+        val builder = factory.newDocumentBuilder()
+        builder.parse(xmlString.byteInputStream())
+        true
+    } catch (e: Exception) {
+        false
+    }
 }
