@@ -1,14 +1,17 @@
-# String Translator Desktop App
+[![String Translator Desktop App Preview](image/StringTranslatorDesktopApp.png)](https://www.youtube.com/watch?v=EDbxJkgJDf8)
+
+Click the image above to watch a demo of the String Translator Desktop App on YouTube.
 
 ## Overview
 
-String Translator Desktop App is a simple desktop application designed to help developers translate strings easily. It supports the translation of multiple strings into various languages, making the localization process more efficient.
+String Translator Desktop App is a powerful desktop application built with Jetpack Compose, aiming to streamline the translation of strings for developers. It empowers users to seamlessly translate multiple strings into various languages, thereby optimizing the localization process.
 
 ## Features
 
 - **Bulk Translation**: Translate multiple strings at once to target languages.
 - **Language Selection**: Choose from a variety of supported languages for translation.
-- **User-Friendly Interface**: Intuitive and easy-to-use graphical interface.
+- **Jetpack Compose UI**: Enjoy an intuitive and visually appealing interface built with Jetpack Compose.
+- **Translation with Google Translate**: Effortlessly translate your text using Google Translate without the need for an API key.
 - **Export to XML Format**: Export translated strings to XML for seamless integration into your projects.
 
 ## Getting Started
@@ -88,27 +91,3 @@ Thank you for your contribution! 🚀
 **Meet**
 
 If you appreciate my work, consider following me on LinkedIn, YouTube, and adding this project to your favorites on GitHub. Stay tuned for more insights into app development, Kotlin, and more!
-
-## License
-
-MIT License
-
-Copyright (c) 2023 Meet
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
