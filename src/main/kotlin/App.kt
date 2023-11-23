@@ -1,3 +1,4 @@
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import screen.translateDialog
 import utils.WindowState
 import utils.isValidXml
 import utils.languageList
+import utils.openOutputFile
 
 @Composable
 @Preview
@@ -157,6 +159,7 @@ fun App() {
                                 delay(3000)
                                 isShowToast = false
                             }
+                            openOutputFile()
                         }
                     })
             }
@@ -165,7 +168,5 @@ fun App() {
 
             }
         }
-
-
     }
 }

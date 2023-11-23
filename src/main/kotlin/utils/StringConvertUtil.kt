@@ -2,6 +2,7 @@ package utils
 
 import models.StringModel
 import org.w3c.dom.Element
+import java.awt.Desktop
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -72,5 +73,14 @@ fun isValidXml(xmlString: String): Boolean {
         true
     } catch (e: Exception) {
         false
+    }
+}
+
+fun openOutputFile() {
+    val file = File("output")
+    if (file.exists()) {
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+            Desktop.getDesktop().open(file)
+        }
     }
 }
