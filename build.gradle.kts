@@ -19,15 +19,31 @@ dependencies {
     implementation("org.json:json:20210307")
 
 }
-
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
 compose.desktop {
     application {
         mainClass = "MainKt"
-
         nativeDistributions {
+            macOS {
+                iconFile.set(project.file("translate.icns"))
+            }
+            windows {
+                iconFile.set(project.file("translate.ico"))
+            }
+            linux {
+                iconFile.set(project.file("translate.png"))
+            }
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.coding.meet.translate"
-            packageVersion = "1.0.0"
+            description = "String Translator Desktop App"
+            vendor = "Meet"
+            version = "1.0.0"
+            licenseFile.set(project.file("LICENSE"))
+            outputBaseDir.set(project.rootDir.resolve("customOutputDir"))
         }
     }
 }
